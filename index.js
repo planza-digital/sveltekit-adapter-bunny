@@ -42,9 +42,18 @@ export default function customAdapter(options = {}) {
   } = options;
 
   // List of npm packages to externalize and use Deno's import syntax
-  // TODO: Read project's package.json
-  const npmPackages = [];
+  // Read project's package.json to get dependencies
+  console.log("Reading project dependencies");
+  const projectPackagePath = join(process.cwd(), "package.json");
+  if (!existsSync(projectPackagePath)) {
+    throw new Error("package.json not found in project directory");
+  }
 
+  const projectPackage = JSON.parse(readFileSync(projectPackagePath, "utf-8"));
+  const npmPackages = [
+    ...Object.keys(projectPackage.dependencies || {}),
+    "@bunny.net/edgescript-sdk", // Always include Bunny SDK
+  ];
   return {
     name: "sveltekit-adapter-bunny",
 
@@ -190,7 +199,7 @@ export default function customAdapter(options = {}) {
         }
 
         // Cleanup temporary directory
-        //builder.rimraf(serverTmpDir);
+        builder.rimraf(serverTmpDir);
 
         console.log("Build complete!");
         console.log(`- Client files: ${clientDir}/`);
