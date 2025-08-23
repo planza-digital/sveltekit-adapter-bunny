@@ -1,2 +1,3 @@
-# svetlekit-adapter-bunny
+# SvetleKit Adapter Bunny
+
 A SvelteKit adapter for deploying to Bunny.net Edge Scripting and Edge Storage

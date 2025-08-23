@@ -1,0 +1,33 @@
+{
+  "name": "sveltekit-adapter-bunny",
+  "version": "0.0.1",
+  "description": "A SvelteKit adapter for deploying to Bunny.net Edge Scripting and Edge Storage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/planza-digital/sveltekit-adapter-bunny.git"
+  },
+  "keywords": [
+    "adapter",
+    "deploy",
+    "hosting",
+    "node.js",
+    "svelte",
+    "sveltekit"
+  ],
+  "author": "Glyn Morris | Planza Digital Labs",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/planza-digital/sveltekit-adapter-bunny/issues"
+  },
+  "homepage": "https://github.com/planza-digital/sveltekit-adapter-bunny#readme",
+  "dependencies": {
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "rollup": "^4.9.5"
+  }
+}
