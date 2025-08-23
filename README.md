@@ -6,6 +6,62 @@ A SvelteKit adapter for deploying to Bunny.net Edge Scripting and Edge Storage.
 
 Bunny's edge scripting runtime is based on Deno isolates. This means that as long as your project is Deno compatible (minus a few platform limitations like filesystem access), your project can be bundled for their edge scripting platform!
 
+## Usage
+
+Using this adapter is just like any other, after adding to your project's dependencies it can be imported and used in `svelte.config.js`. In order to generate a server bundle that can access your static assets, the adapter needs information about the storage zone they will be kept on, such as the primary location and path to where they will be kept. By default, the bundled application will read these values from the environment variables at runtime.
+
+```javascript
+import adapter from "@planza-digital/sveltekit-adapter-bunny";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  preprocess: vitePreprocess(),
+  compilerOptions: { runes: true },
+  kit: {
+    adapter: adapter(),
+  },
+};
+
+export default config;
+```
+
+```bash
+BUNNY_ASSETS_PREFIX="deployment-x"
+BUNNY_ASSETS_REGION="storage.bunnycdn.com"
+BUNNY_ASSETS_ZONE="my-app-assets"
+BUNNY_ASSETS_TOKEN="00000000-0000-0000-000000000000-0000-0000"
+```
+
+If however you wish to bake these values into the final bundle at build time (akin to `$env/static/private`), you can pass them to the adapter and it will inject them directly into the final bundle
+
+```javascript
+import adapter from "@planza-digital/sveltekit-adapter-bunny";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  preprocess: vitePreprocess(),
+  compilerOptions: { runes: true },
+  kit: {
+    adapter: adapter({
+      assets: {
+        prefix: "deployment-x",
+        region: "storage.bunnycdn.com",
+        zone: "my-app-assets",
+        token: "00000000-0000-0000-000000000000-0000-0000",
+      },
+    }),
+  },
+};
+
+export default config;
+```
+
+## Deployment
+
+Since the services needed to host a SvelteKit app on Bunny are spread across multiple services, the adapter includes a deployment tool to upload the project's server bundle, static assets, and environment variables.
+
 ## Limitations
 
 Currently, Bunny.net Edge Scripting has a few limitations. Server bundles must be a single file for the entire project. This means there is currently no way to use a `package.json` or `deno.json` file. Thankfully, Deno supports direct import satetments from npm, jsr, and urls like esm.sh. This means your project's dependencies must all be available to import via one of these methods. You can learn more about [Deno's support for remote imports here](https://docs.deno.com/runtime/fundamentals/modules/#importing-third-party-modules-and-libraries). For Bunny platform specific limitations, [you can find those here](https://docs.bunny.net/docs/edge-scripting-limits).

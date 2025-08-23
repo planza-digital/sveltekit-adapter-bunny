@@ -1,6 +1,7 @@
 // Use Deno's npm import syntax for external packages
 import * as BunnySDK from "npm:@bunny.net/edgescript-sdk";
 import * as BunnyStorageSDK from "npm:@bunny.net/storage-sdk";
+import process from "node:process";
 import { Server } from "./index.js";
 import { manifest } from "./manifest.js";
 
@@ -8,7 +9,7 @@ import { manifest } from "./manifest.js";
 const server = new Server(manifest);
 
 const fileReader = (options) => {
-  const { assetPath, region, zone, token } = options;
+  const { prefix, region, zone, token } = options;
 
   const storage = BunnyStorageSDK.zone.connect_with_accesskey(
     region,
@@ -18,7 +19,7 @@ const fileReader = (options) => {
 
   return async (file) => {
     return await BunnyStorageSDK.file
-      .download(storage, assetPath + file)
+      .download(storage, prefix + file)
       .catch((e) => {
         console.error(e);
         return null;
@@ -30,10 +31,10 @@ const fileReader = (options) => {
 const initPromise = server.init({
   env: {},
   read: fileReader({
-    assetPath: "",
-    region: BunnyStorageSDK.regions.StorageRegion.Falkenstein,
-    zone: "storage-zone-name",
-    token: "token",
+    prefix: process.env.BUNNY_ASSETS_PREFIX,
+    region: process.env.BUNNY_ASSETS_REGION,
+    zone: process.env.BUNNY_ASSETS_ZONE,
+    token: process.env.BUNNY_ASSETS_TOKEN,
   }),
 });
 
