@@ -11,7 +11,6 @@ import { rollup } from "rollup";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
-import { terser } from "rollup-plugin-terser";
 import { builtinModules } from "module";
 
 function copyDir(src, dest) {
@@ -117,21 +116,6 @@ export default function customAdapter(options = {}) {
             },
           },
         ];
-
-        // Add minification if enabled
-        if (minify) {
-          plugins.push(
-            terser({
-              format: {
-                comments: false,
-              },
-              compress: {
-                drop_console: false,
-                drop_debugger: true,
-              },
-            })
-          );
-        }
 
         const bundle = await rollup({
           input: wrapperPath,
