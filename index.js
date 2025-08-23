@@ -4,6 +4,7 @@ import {
   copyFileSync,
   existsSync,
   readdirSync,
+  readFileSync,
 } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -12,6 +13,8 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { builtinModules } from "module";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 function copyDir(src, dest) {
   mkdirSync(dest, { recursive: true });
@@ -68,11 +71,22 @@ export default function customAdapter(options = {}) {
 
         // Create a wrapper file that imports the server and wraps it with BunnySDK
         console.log("Creating wrapper file");
-        const wrapperCode = ``;
+        // Load wrapper code from file
+        console.log("Loading wrapper code");
+        const wrapperPath = join(__dirname, "src", "server.js");
+        if (!existsSync(wrapperPath)) {
+          throw new Error(`Wrapper file not found at: ${wrapperPath}`);
+        }
+
+        let wrapperCode = readFileSync(wrapperPath, "utf-8")
+          .replace(/\.\/index\.js/g, join(serverTmpDir, "index.js"))
+          .replace(/\.\/manifest\.js/g, join(serverTmpDir, "manifest.js"));
+
+        console.log(wrapperCode);
 
         // Write the wrapper file to the temp directory
-        const wrapperPath = join(serverTmpDir, "wrapper.js");
-        writeFileSync(wrapperPath, wrapperCode);
+        const tempWrapperPath = join(serverTmpDir, "wrapper.js");
+        writeFileSync(tempWrapperPath, wrapperCode);
 
         // Bundle everything together (wrapper + server code)
         console.log("Bundling everything with Rollup");
@@ -118,7 +132,7 @@ export default function customAdapter(options = {}) {
         ];
 
         const bundle = await rollup({
-          input: wrapperPath,
+          input: tempWrapperPath,
           plugins,
           external: (id) => {
             // Externalize Node.js built-in modules with node: prefix
@@ -176,7 +190,7 @@ export default function customAdapter(options = {}) {
         }
 
         // Cleanup temporary directory
-        builder.rimraf(serverTmpDir);
+        //builder.rimraf(serverTmpDir);
 
         console.log("Build complete!");
         console.log(`- Client files: ${clientDir}/`);
