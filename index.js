@@ -46,7 +46,9 @@ export default function customAdapter(options = {}) {
   console.log("Reading project dependencies");
   const projectPackagePath = join(process.cwd(), "package.json");
   if (!existsSync(projectPackagePath)) {
-    throw new Error("package.json not found in project directory");
+    console.warn(
+      "No package.json found for this project, all imports will be bundled..."
+    );
   }
 
   const projectPackage = JSON.parse(readFileSync(projectPackagePath, "utf-8"));
