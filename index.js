@@ -39,6 +39,7 @@ export default function customAdapter(options = {}) {
     externals = [],
     minify = false,
     sourcemap = false,
+    deploy = null,
   } = options;
 
   // List of npm packages to externalize and use Deno's import syntax
