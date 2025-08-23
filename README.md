@@ -6,13 +6,17 @@ A SvelteKit adapter for deploying to Bunny.net Edge Scripting and Edge Storage.
 
 Bunny's edge scripting runtime is based on Deno isolates. This means that as long as your project is Deno compatible (minus a few platform limitations like filesystem access), your project can be bundled for their edge scripting platform!
 
-## Why can't I use Adapter Deno?
+## Cloudflare Workers is affordable and officially supported, why not use that instead?
 
-Due to limitations outlined below, there are additional steps required to bundle a SvelteKit project for the Bunny Edge platform.
+This adapter is a part of our efforts to migrate away from Cloudflare Workers. Unfortunatley, our experience with them has been sub-par. Non-enterprise customers are the first to be de-prioritized when their network is experiencing high loads, which results in increased response times. For our edge computing needs, this has lead to response times that are significantly higher than if they were just served from the origin. This defeats the purpose of edge compute. Our focus is providing cutting edge solutions for business of all sizes, so they are no longer a good fit for our needs.
 
 ## Why not use Deno Deploy?
 
-When investigating edge runtimes for our platforms, Deno Deploy was on our radar. We decided against it for the time being due to a decreasing number of Points of Processing (PoP). Bunny's pricing was much more competetive and offered a more complete platform. This comes at the cost of DX, which we hope to remedy with this adapter.
+When investigating edge runtimes for our platforms, Deno Deploy was on our radar. We decided against it for the time being due to a decreasing number of Points of Processing (PoP). Bunny's pricing was much more competetive and offered a more complete platform. This comes at the cost of DX, which we hope to remedy with this adapter. You can read more about challenges with Deno Deploy on the [archived adapter project](https://github.com/dbushell/sveltekit-adapter-deno).
+
+## Why can't I use Adapter Deno?
+
+Due to limitations outlined below, there are additional steps required to bundle a SvelteKit project for the Bunny Edge platform.
 
 ## Limitations
 
