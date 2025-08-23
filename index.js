@@ -34,13 +34,14 @@ function copyDir(src, dest) {
 
 export default function customAdapter(options = {}) {
   const {
-    serverFile = "index.js",
-    clientDir = "client",
     externals = [],
     minify = false,
     sourcemap = false,
-    deploy = null,
+    assets = null,
   } = options;
+
+  const serverFile = "index.js";
+  const clientDir = "client";
 
   // List of npm packages to externalize and use Deno's import syntax
   // Read project's package.json to get dependencies
@@ -93,6 +94,38 @@ export default function customAdapter(options = {}) {
         let wrapperCode = readFileSync(wrapperPath, "utf-8")
           .replace(/\.\/index\.js/g, join(serverTmpDir, "index.js"))
           .replace(/\.\/manifest\.js/g, join(serverTmpDir, "manifest.js"));
+
+        if (assets) {
+          const { prefix, region, zone, token } = assets;
+
+          if (prefix) {
+            wrapperCode = wrapperCode.replace(
+              "process.env.BUNNY_ASSETS_PREFIX",
+              JSON.stringify(prefix)
+            );
+          }
+
+          if (region) {
+            wrapperCode = wrapperCode.replace(
+              "process.env.BUNNY_ASSETS_REGION",
+              JSON.stringify(region)
+            );
+          }
+
+          if (zone) {
+            wrapperCode = wrapperCode.replace(
+              "process.env.BUNNY_ASSETS_ZONE",
+              JSON.stringify(zone)
+            );
+          }
+
+          if (token) {
+            wrapperCode = wrapperCode.replace(
+              "process.env.BUNNY_ASSETS_TOKEN",
+              JSON.stringify(token)
+            );
+          }
+        }
 
         console.log(wrapperCode);
 
