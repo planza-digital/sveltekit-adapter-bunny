@@ -1,4 +1,4 @@
-# SvetleKit Adapter Bunny
+# SvelteKit Adapter Bunny
 
 A SvelteKit adapter for deploying to Bunny.net Edge Scripting and Edge Storage.
 
@@ -82,7 +82,7 @@ const config = {
 export default config;
 ```
 
-If you have packages you want ESBuild to treat as externals and skip bundling, you can specify them in the externals array. Runtime dependencies in you package.json are automatically externalized on build.
+If you have packages you want ESBuild to treat as externals and skip bundling, you can specify them in the externals array. Runtime dependencies in your package.json are automatically externalized on build.
 
 ```javascript
 import adapter from "@planza-digital/sveltekit-adapter-bunny";
