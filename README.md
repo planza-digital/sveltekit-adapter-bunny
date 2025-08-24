@@ -27,13 +27,17 @@ export default config;
 ```
 
 ```bash
+# A subdirectory or path to where assets are located
 BUNNY_ASSETS_PREFIX="deployment-x"
+# The primary storage region for your assets. This is listed as the FTP hostname on the dashboard. (https://docs.bunny.net/reference/storage-api#storage-endpoints)
 BUNNY_ASSETS_REGION="storage.bunnycdn.com"
+# The name of the assets zone, which is the same as your FTP username. (https://docs.bunny.net/reference/storage-api#authentication)
 BUNNY_ASSETS_ZONE="my-app-assets"
-BUNNY_ASSETS_TOKEN="00000000-0000-0000-000000000000-0000-0000"
+# Your access token, which is the same as your FTP password. It is reccomended to use your Read-Only password here. (https://docs.bunny.net/reference/storage-api#authentication)
+BUNNY_ASSETS_KEY="00000000-0000-0000-000000000000-0000-0000"
 ```
 
-If however you wish to bake these values into the final bundle at build time (akin to `$env/static/private`), you can pass them to the adapter and it will inject them directly into the final bundle
+If however you wish to bake these values into the final bundle at build time (akin to `$env/static/private`), you can pass them to the adapter and it will inject them directly into the final bundle. While there may be instances where you wish to use injected variables, it is reccomended to keep at least your token dynamic so you can replace it easily if you need to roll it over.
 
 ```javascript
 import adapter from "@planza-digital/sveltekit-adapter-bunny";

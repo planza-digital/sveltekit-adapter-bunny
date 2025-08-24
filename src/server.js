@@ -9,12 +9,12 @@ import { manifest } from "./manifest.js";
 const server = new Server(manifest);
 
 const fileReader = (options) => {
-  const { prefix, region, zone, token } = options;
+  const { prefix, region, zone, key } = options;
 
   const storage = BunnyStorageSDK.zone.connect_with_accesskey(
     region,
     zone,
-    token
+    key
   );
 
   return async (file) => {
@@ -34,7 +34,7 @@ const initPromise = server.init({
     prefix: process.env.BUNNY_ASSETS_PREFIX,
     region: process.env.BUNNY_ASSETS_REGION,
     zone: process.env.BUNNY_ASSETS_ZONE,
-    token: process.env.BUNNY_ASSETS_TOKEN,
+    key: process.env.BUNNY_ASSETS_KEY,
   }),
 });
 

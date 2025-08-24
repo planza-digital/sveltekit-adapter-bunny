@@ -121,7 +121,7 @@ export default function customAdapter(options = {}) {
 
           if (token) {
             wrapperCode = wrapperCode.replace(
-              "process.env.BUNNY_ASSETS_TOKEN",
+              "process.env.BUNNY_ASSETS_KEY",
               JSON.stringify(token)
             );
           }
