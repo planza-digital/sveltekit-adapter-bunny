@@ -116,6 +116,10 @@ Edge scripting doesn't directly support static file bindings either, so they mus
 
 No, we are not affiliated with Bunny, but we are their customers. Our hope is that by making our adapter open source we can increase platform adoption and help it improve.
 
+### Is this adapter production ready?
+
+While we are currently using this adapter for production builds, we only ensure it's compatbile with SvelteKit features that we use. If you want to use this adapter for production builds, we encourage you to rigorously test the output to ensure everything works correctly. We do want to have this adapter be feature complete, so if you find a SvelteKit feature this adapter is not compatible with, [we encourage you to file an issue](https://github.com/planza-digital/sveltekit-adapter-bunny/issues).
+
 ### Cloudflare Workers is affordable and officially supported, why not use that instead?
 
 This adapter is a part of our efforts to migrate away from Cloudflare Workers. Unfortunatley, our experience with them has been sub-par. Non-enterprise customers are the first to be de-prioritized when their network is experiencing high loads, which results in increased response times. For our edge computing needs, this has lead to response times that are significantly higher than if they were just served from the origin. This defeats the purpose of edge compute. Our focus is providing cutting edge solutions for business of all sizes, so they are no longer a good fit for our needs.
