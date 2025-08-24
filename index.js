@@ -13,6 +13,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import { builtinModules } from "module";
+import terser from "@rollup/plugin-terser";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -33,12 +34,7 @@ function copyDir(src, dest) {
 }
 
 export default function customAdapter(options = {}) {
-  const {
-    externals = [],
-    minify = false,
-    sourcemap = false,
-    assets = null,
-  } = options;
+  const { externals = [], minify = true, assets = null } = options;
 
   const serverFile = "index.js";
   const clientDir = "client";
@@ -56,6 +52,7 @@ export default function customAdapter(options = {}) {
   const projectPackage = JSON.parse(readFileSync(projectPackagePath, "utf-8"));
   const npmPackages = [
     ...Object.keys(projectPackage.dependencies || {}),
+    ...externals,
     "@bunny.net/edgescript-sdk", // Always include Bunny SDK
   ];
   return {
@@ -176,6 +173,8 @@ export default function customAdapter(options = {}) {
           },
         ];
 
+        if (minify) plugins.push(terser());
+
         const bundle = await rollup({
           input: tempWrapperPath,
           plugins,
@@ -217,7 +216,7 @@ export default function customAdapter(options = {}) {
           file: join(outputDir, serverFile),
           format: "esm",
           exports: "named",
-          sourcemap,
+          //sourcemap,
           inlineDynamicImports: true,
           compact: minify,
           generatedCode: {

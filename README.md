@@ -37,7 +37,9 @@ BUNNY_ASSETS_ZONE="my-app-assets"
 BUNNY_ASSETS_KEY="00000000-0000-0000-000000000000-0000-0000"
 ```
 
-If however you wish to bake these values into the final bundle at build time (akin to `$env/static/private`), you can pass them to the adapter and it will inject them directly into the final bundle. While there may be instances where you wish to use injected variables, it is reccomended to keep at least your token dynamic so you can replace it easily if you need to roll it over.
+### Options
+
+If you wish to bake these values into the final bundle at build time (akin to `$env/static/private`), you can pass them to the adapter and it will inject them directly into the final bundle. While there may be instances where you wish to use injected variables, it is reccomended to keep at least your token dynamic so you can replace it easily if you need to roll it over.
 
 ```javascript
 import adapter from "@planza-digital/sveltekit-adapter-bunny";
@@ -56,6 +58,42 @@ const config = {
         token: "00000000-0000-0000-000000000000-0000-0000",
       },
     }),
+  },
+};
+
+export default config;
+```
+
+By default, the output bundle will be minified to save space. This can be disabled with the `minify` option, which can be useful if you want to debug the bundle.
+
+```javascript
+import adapter from "@planza-digital/sveltekit-adapter-bunny";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  preprocess: vitePreprocess(),
+  compilerOptions: { runes: true },
+  kit: {
+    adapter: adapter({ minify: false }),
+  },
+};
+
+export default config;
+```
+
+If you have packages you want ESBuild to treat as externals and skip bundling, you can specify them in the externals array. Runtime dependencies in you package.json are automatically externalized on build.
+
+```javascript
+import adapter from "@planza-digital/sveltekit-adapter-bunny";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  preprocess: vitePreprocess(),
+  compilerOptions: { runes: true },
+  kit: {
+    adapter: adapter({ externals: ["@stripe/stripe-js"] }),
   },
 };
 
